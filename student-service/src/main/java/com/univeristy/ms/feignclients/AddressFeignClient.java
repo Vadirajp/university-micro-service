@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.univeristy.ms.request.CreateAddressRequest;
 import com.univeristy.ms.response.AddressResponse;
 
-@FeignClient(url = "${address.service.url}", value = "address-feign-client", path = "/api/address")
+//@FeignClient(url = "${address.service.url}", value = "address-feign-client", path = "/api/address")
+@FeignClient(value = "address-service", path = "/api/address")
 public interface AddressFeignClient {
 
 	@GetMapping("/getById/{id}")
