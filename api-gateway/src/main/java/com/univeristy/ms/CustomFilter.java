@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 
 import reactor.core.publisher.Mono;
@@ -34,7 +35,18 @@ public class CustomFilter implements GlobalFilter, Ordered {
 			return exchange.getResponse().setComplete();
 		}
 
-		return chain.filter(exchange);
+		//Pre filter -> consumer -> api gateway -> before going to micro-service operations
+		//Post filter -> micro-service retuns response to api gateway -> before sending that response to consumer operations
+		//then(Mono.fromRunnable(() -> { is for post filter, without that is pre filter
+		return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+			ServerHttpResponse response = exchange.getResponse();
+			 // Post Filter
+            logger.info(
+                    "Post Filter URL = {}, Status = {}",
+                    request.getURI().getPath(),
+                    response.getStatusCode());
+		}));
+		
 	}
 
 	@Override
