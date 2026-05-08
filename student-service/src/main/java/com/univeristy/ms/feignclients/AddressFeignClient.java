@@ -11,13 +11,16 @@ import com.univeristy.ms.request.CreateAddressRequest;
 import com.univeristy.ms.response.AddressResponse;
 
 //@FeignClient(url = "${address.service.url}", value = "address-feign-client", path = "/api/address")
-@FeignClient(value = "address-service", path = "/api/address")
+//@FeignClient(value = "address-service", path = "/api/address") // this will be direct micro service call from student to address
+@FeignClient(value = "api-gateway") // this will be like consumer->api-gateway->student->api-gateway->address->api-gateway->consumer
 public interface AddressFeignClient {
 
-	@GetMapping("/getById/{id}")
+//	@GetMapping("/getById/{id}")
+	@GetMapping("/address-service/api/address/getById/{id}")
 	public ResponseEntity<AddressResponse> getById(@PathVariable long id);
 
-	@PostMapping("/create")
+//	@PostMapping("/create")
+	@PostMapping("/address-service/api/address/create")
 	ResponseEntity<AddressResponse> createAddress(@RequestBody CreateAddressRequest request);
 
 }

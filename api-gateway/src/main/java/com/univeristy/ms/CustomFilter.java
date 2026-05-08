@@ -26,7 +26,7 @@ public class CustomFilter implements GlobalFilter, Ordered {
 
 		String authHeader = request.getHeaders().getFirst("auth");
 
-		logger.info("Authorization = {}", authHeader);
+		logger.info("URL = {}, Authorization = {}",  request.getURI().getPath(), authHeader);
 
 		if (authHeader == null || !authHeader.equals(API_KEY)) {
 
